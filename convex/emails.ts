@@ -38,7 +38,7 @@ export const sendEmail = mutation({
 
 export const listMyEmailsAndStatuses = query({
   args: {},
-  handler: async (ctx, args) => {
+  handler: async (ctx, _args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) return [];
 
@@ -73,7 +73,7 @@ export const handleEmailEvent = internalMutation({
     id: vEmailId,
     event: vEmailEvent,
   },
-  handler: async (ctx, args) => {
+  handler: async (_ctx, args) => {
     console.log("Email event:", args.id, args.event);
     // Probably do something with the event if you care about deliverability!
   },
