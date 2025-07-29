@@ -10,19 +10,11 @@ const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 
 // Initialize theme on page load
 const initializeTheme = () => {
-  const savedTheme = localStorage.getItem('theme') || 'system'
+  const savedTheme = localStorage.getItem('theme') || 'light'
   const root = document.documentElement
   
   root.classList.remove('light', 'dark')
-  
-  if (savedTheme === 'system') {
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light'
-    root.classList.add(systemTheme)
-  } else {
-    root.classList.add(savedTheme)
-  }
+  root.classList.add(savedTheme)
 }
 
 // Initialize theme before React renders

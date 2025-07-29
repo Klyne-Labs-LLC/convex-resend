@@ -1,45 +1,25 @@
 import { useEffect, useState } from 'react'
 
-export type Theme = 'light' | 'dark' | 'system'
+export type Theme = 'light' | 'dark'
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('theme') as Theme) || 'system'
+      return (localStorage.getItem('theme') as Theme) || 'light'
     }
-    return 'system'
+    return 'light'
   })
 
-  const applyTheme = (newTheme: Theme) => {
+  useEffect(() => {
     const root = window.document.documentElement
     root.classList.remove('light', 'dark')
-
-    if (newTheme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-      root.classList.add(systemTheme)
-    } else {
-      root.classList.add(newTheme)
-    }
-  }
-
-  useEffect(() => {
-    applyTheme(theme)
+    root.classList.add(theme)
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handleChange = () => {
-      if (theme === 'system') {
-        applyTheme('system')
-      }
-    }
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light')
+  }
 
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [theme])
-
-  return { theme, setTheme }
+  return { theme, setTheme, toggleTheme, isDark: theme === 'dark' }
 }
