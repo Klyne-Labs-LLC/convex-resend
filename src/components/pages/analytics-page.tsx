@@ -37,19 +37,11 @@ export function AnalyticsPage() {
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <div className="px-4 lg:px-6">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold mb-2">📈 Email Analytics</h1>
-              <p className="text-muted-foreground">
-                Detailed insights into your email performance
-              </p>
-            </div>
-
             {/* Key Metrics */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Delivery Rate</CardTitle>
-                  <span className="text-2xl">✅</span>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{deliveryRate}%</div>
@@ -61,7 +53,6 @@ export function AnalyticsPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Open Rate</CardTitle>
-                  <span className="text-2xl">👀</span>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{openRate}%</div>
@@ -73,7 +64,6 @@ export function AnalyticsPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Bounce Rate</CardTitle>
-                  <span className="text-2xl">❌</span>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{bounceRate}%</div>
@@ -85,7 +75,6 @@ export function AnalyticsPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Complaint Rate</CardTitle>
-                  <span className="text-2xl">🤬</span>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{complaintRate}%</div>
@@ -100,18 +89,12 @@ export function AnalyticsPage() {
             <div className="grid gap-6 md:grid-cols-2 mb-8">
               <Card>
                 <CardHeader>
-                  <CardTitle>Email Status Breakdown</CardTitle>
-                  <CardDescription>
-                    Distribution of email statuses
-                  </CardDescription>
+                  <CardTitle>Status Breakdown</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span>✅</span>
-                        <span>Delivered</span>
-                      </div>
+                      <span>Delivered</span>
                       <div className="flex items-center gap-2">
                         <div className="text-sm font-medium">{stats.delivered}</div>
                         <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
@@ -123,10 +106,7 @@ export function AnalyticsPage() {
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span>👀</span>
-                        <span>Opened</span>
-                      </div>
+                      <span>Opened</span>
                       <div className="flex items-center gap-2">
                         <div className="text-sm font-medium">{stats.opened}</div>
                         <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
@@ -138,10 +118,7 @@ export function AnalyticsPage() {
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span>❌</span>
-                        <span>Bounced</span>
-                      </div>
+                      <span>Bounced</span>
                       <div className="flex items-center gap-2">
                         <div className="text-sm font-medium">{stats.bounced}</div>
                         <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
@@ -153,10 +130,7 @@ export function AnalyticsPage() {
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span>🤬</span>
-                        <span>Complained</span>
-                      </div>
+                      <span>Complained</span>
                       <div className="flex items-center gap-2">
                         <div className="text-sm font-medium">{stats.complained}</div>
                         <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
@@ -174,14 +148,10 @@ export function AnalyticsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Recent Activity</CardTitle>
-                  <CardDescription>
-                    Daily email activity over the past week
-                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {Object.keys(dailyStats).length === 0 ? (
                     <div className="text-center py-8">
-                      <span className="text-4xl mb-2 block">📊</span>
                       <p className="text-muted-foreground">No recent activity</p>
                     </div>
                   ) : (
@@ -189,16 +159,10 @@ export function AnalyticsPage() {
                       {Object.entries(dailyStats).map(([date, stats]) => (
                         <div key={date} className="flex items-center justify-between">
                           <div className="text-sm font-medium">{date}</div>
-                          <div className="flex items-center gap-4 text-xs">
-                            <span className="flex items-center gap-1">
-                              <span>📧</span> {stats.sent}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <span>✅</span> {stats.delivered}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <span>👀</span> {stats.opened}
-                            </span>
+                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                            <span>Sent: {stats.sent}</span>
+                            <span>Delivered: {stats.delivered}</span>
+                            <span>Opened: {stats.opened}</span>
                           </div>
                         </div>
                       ))}
@@ -207,34 +171,6 @@ export function AnalyticsPage() {
                 </CardContent>
               </Card>
             </div>
-
-            {/* Performance Summary */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Performance Summary</CardTitle>
-                <CardDescription>
-                  Overall email performance insights
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div className="text-center p-4 border rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">{deliveryRate}%</div>
-                    <div className="text-sm text-muted-foreground">Excellent delivery rate</div>
-                  </div>
-                  <div className="text-center p-4 border rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">{openRate}%</div>
-                    <div className="text-sm text-muted-foreground">
-                      {typeof openRate === 'string' && parseFloat(openRate) > 20 ? "Good" : typeof openRate === 'string' && parseFloat(openRate) > 10 ? "Average" : "Needs improvement"} open rate
-                    </div>
-                  </div>
-                  <div className="text-center p-4 border rounded-lg">
-                    <div className="text-2xl font-bold text-purple-600">{stats.totalEmails}</div>
-                    <div className="text-sm text-muted-foreground">Total emails sent</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>

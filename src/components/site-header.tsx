@@ -29,16 +29,6 @@ export function SiteHeader() {
         <h1 className="text-base font-medium">{currentTitle}</h1>
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
-          <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
-            <a
-              href="https://github.com/anthropics/claude-code"
-              rel="noopener noreferrer"
-              target="_blank"
-              className="dark:text-foreground"
-            >
-              Built with Claude Code
-            </a>
-          </Button>
         </div>
       </div>
     </header>

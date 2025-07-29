@@ -103,21 +103,14 @@ function SettingsPage() {
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <div className="px-4 lg:px-6">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold mb-2">⚙️ Settings</h1>
-              <p className="text-muted-foreground">
-                Manage your account and preferences
-              </p>
-            </div>
-
             <div className="max-w-2xl mx-auto space-y-6">
               <div className="bg-card p-6 rounded-lg border">
-                <h2 className="text-xl font-semibold mb-4">Account</h2>
+                <h2 className="text-lg font-semibold mb-4">Account</h2>
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm font-medium">Status</label>
                     <p className="text-sm text-muted-foreground">
-                      {isAuthenticated ? "✅ Signed in" : "❌ Not signed in"}
+                      {isAuthenticated ? "Signed in" : "Not signed in"}
                     </p>
                   </div>
                   <div>
@@ -125,14 +118,14 @@ function SettingsPage() {
                       onClick={() => void signOut()}
                       className="bg-destructive text-destructive-foreground px-4 py-2 rounded-md text-sm hover:bg-destructive/90 transition-colors"
                     >
-                      🚪 Sign Out
+                      Sign Out
                     </button>
                   </div>
                 </div>
               </div>
 
               <div className="bg-card p-6 rounded-lg border">
-                <h2 className="text-xl font-semibold mb-4">Email Configuration</h2>
+                <h2 className="text-lg font-semibold mb-4">Email Configuration</h2>
                 <p className="text-sm text-muted-foreground">
                   Email settings are managed through your Resend account. 
                   Visit <a href="https://resend.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">resend.com</a> to configure domains and API keys.
@@ -140,9 +133,9 @@ function SettingsPage() {
               </div>
 
               <div className="bg-card p-6 rounded-lg border">
-                <h2 className="text-xl font-semibold mb-4">About</h2>
+                <h2 className="text-lg font-semibold mb-4">About</h2>
                 <p className="text-sm text-muted-foreground">
-                  This is a demo application for testing Resend email delivery built with Convex, React, and shadcn/ui.
+                  Demo application for testing Resend email delivery built with Convex, React, and shadcn/ui.
                 </p>
               </div>
             </div>
@@ -160,17 +153,10 @@ function HelpPage() {
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <div className="px-4 lg:px-6">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold mb-2">❓ Help & Support</h1>
-              <p className="text-muted-foreground">
-                Get help with using the email testing application
-              </p>
-            </div>
-
             <div className="max-w-4xl mx-auto space-y-6">
               <div className="grid gap-6 md:grid-cols-2">
                 <div className="bg-card p-6 rounded-lg border">
-                  <h2 className="text-xl font-semibold mb-4">🚀 Getting Started</h2>
+                  <h2 className="text-lg font-semibold mb-4">Getting Started</h2>
                   <ol className="space-y-2 text-sm text-muted-foreground">
                     <li>1. Sign in with your credentials</li>
                     <li>2. Navigate to "Send Email" to compose a test email</li>
@@ -181,7 +167,7 @@ function HelpPage() {
                 </div>
 
                 <div className="bg-card p-6 rounded-lg border">
-                  <h2 className="text-xl font-semibold mb-4">📧 Test Email Addresses</h2>
+                  <h2 className="text-lg font-semibold mb-4">Test Email Addresses</h2>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li>• <code>delivered@resend.dev</code> - Always delivers successfully</li>
                     <li>• <code>bounced@resend.dev</code> - Always bounces</li>
@@ -190,7 +176,7 @@ function HelpPage() {
                 </div>
 
                 <div className="bg-card p-6 rounded-lg border">
-                  <h2 className="text-xl font-semibold mb-4">📊 Understanding Analytics</h2>
+                  <h2 className="text-lg font-semibold mb-4">Understanding Analytics</h2>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li>• <strong>Delivery Rate:</strong> Percentage of emails successfully delivered</li>
                     <li>• <strong>Open Rate:</strong> Percentage of delivered emails that were opened</li>
@@ -200,7 +186,7 @@ function HelpPage() {
                 </div>
 
                 <div className="bg-card p-6 rounded-lg border">
-                  <h2 className="text-xl font-semibold mb-4">🔧 Troubleshooting</h2>
+                  <h2 className="text-lg font-semibold mb-4">Troubleshooting</h2>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li>• Emails not sending? Check your domain verification</li>
                     <li>• Status not updating? Wait a few moments for real-time updates</li>
@@ -211,7 +197,7 @@ function HelpPage() {
               </div>
 
               <div className="bg-card p-6 rounded-lg border">
-                <h2 className="text-xl font-semibold mb-4">📞 Contact & Support</h2>
+                <h2 className="text-lg font-semibold mb-4">Support Links</h2>
                 <div className="grid gap-4 md:grid-cols-3">
                   <div>
                     <h3 className="font-medium mb-2">Convex Support</h3>

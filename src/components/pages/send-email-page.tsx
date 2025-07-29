@@ -55,56 +55,38 @@ export function SendEmailPage() {
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <div className="px-4 lg:px-6">
             <div className="max-w-2xl mx-auto">
-              <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold mb-2">🚀 Send Test Email</h1>
-                <p className="text-muted-foreground">
-                  Test email delivery to Resend's test addresses
-                </p>
-              </div>
-
               {success && (
                 <Alert className="mb-6">
                   <AlertDescription>
-                    ✅ Email sent successfully!
+                    Email sent successfully!
                   </AlertDescription>
                 </Alert>
               )}
 
               <Card>
-                <CardHeader>
-                  <CardTitle>Email Composer</CardTitle>
-                  <CardDescription>
-                    Compose and send your test email
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                   <form onSubmit={(e) => void handleSendEmail(e)} className="space-y-6">
                     {/* Recipient Selection */}
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">📮</span>
-                        <Label className="text-lg font-semibold">
-                          Choose Test Recipient
-                        </Label>
-                      </div>
+                    <div className="space-y-3">
+                      <Label className="text-base font-medium">Test Recipients</Label>
                       <RadioGroup
                         value={selectedRecipient}
                         onValueChange={setSelectedRecipient}
                       >
-                        <div className="grid grid-cols-1 gap-3">
+                        <div className="grid grid-cols-1 gap-2">
                           {testEmails.map((email) => (
-                            <div key={email} className="flex items-center space-x-3 border rounded-lg p-4">
+                            <div key={email} className="flex items-center space-x-3 border rounded-lg p-3">
                               <RadioGroupItem value={email} id={email} />
-                              <Label htmlFor={email} className="flex items-center gap-2 cursor-pointer">
+                              <Label htmlFor={email} className="flex items-center gap-2 cursor-pointer text-sm">
                                 <span>{email}</span>
-                                <span>
+                                <span className="text-xs">
                                   {email.includes("delivered")
-                                    ? "✅"
+                                    ? "✓"
                                     : email.includes("bounced")
-                                      ? "❌"
+                                      ? "✗"
                                       : email.includes("complained")
-                                        ? "⚠️"
-                                        : "👋"}
+                                        ? "!"
+                                        : ""}
                                 </span>
                               </Label>
                             </div>
@@ -117,12 +99,10 @@ export function SendEmailPage() {
 
                     {/* To Field */}
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">📝</span>
-                        <Label className="text-lg font-semibold">To</Label>
-                      </div>
+                      <Label htmlFor="email" className="text-base font-medium">To</Label>
                       <Input
-                        type="text"
+                        id="email"
+                        type="email"
                         value={selectedRecipient}
                         onChange={(e) => setSelectedRecipient(e.target.value)}
                         placeholder="email@your-verified-domain.com"
@@ -131,11 +111,9 @@ export function SendEmailPage() {
 
                     {/* Subject Field */}
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">📝</span>
-                        <Label className="text-lg font-semibold">Subject</Label>
-                      </div>
+                      <Label htmlFor="subject" className="text-base font-medium">Subject</Label>
                       <Input
+                        id="subject"
                         type="text"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
@@ -146,11 +124,9 @@ export function SendEmailPage() {
 
                     {/* Message Field */}
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">💬</span>
-                        <Label className="text-lg font-semibold">Message</Label>
-                      </div>
+                      <Label htmlFor="message" className="text-base font-medium">Message</Label>
                       <Textarea
+                        id="message"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         placeholder="Write your email message here..."
@@ -169,13 +145,10 @@ export function SendEmailPage() {
                       {isSending ? (
                         <>
                           <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full mr-2"></div>
-                          Sending Email...
+                          Sending...
                         </>
                       ) : (
-                        <>
-                          <span className="mr-2">🚀</span>
-                          Send Test Email
-                        </>
+                        "Send Email"
                       )}
                     </Button>
                   </form>
