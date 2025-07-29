@@ -11,8 +11,21 @@ import { SendEmailPage } from "@/components/pages/send-email-page";
 import { EmailHistoryPage } from "@/components/pages/email-history-page";
 import { AnalyticsPage } from "@/components/pages/analytics-page";
 import { ResourcesPage } from "@/components/pages/resources-page";
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { themes } from "@/themes";
+import { useThemeLoader } from "@/hooks/use-theme-loader";
+import { DEFAULT_THEME } from "@/theme.config";
 
 export default function App() {
+  // Global theme state
+  const [theme, setTheme] = React.useState(() => localStorage.getItem("theme") || DEFAULT_THEME);
+  useThemeLoader(theme);
+  React.useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   return (
     <Routes>
       {/* Root redirect to dashboard */}
@@ -74,7 +87,7 @@ export default function App() {
         element={
           <ProtectedRoute>
             <DashboardLayout>
-              <SettingsPage />
+              <SettingsPage theme={theme} setTheme={setTheme} />
             </DashboardLayout>
           </ProtectedRoute>
         }
@@ -93,8 +106,7 @@ export default function App() {
   );
 }
 
-// Settings page component
-function SettingsPage() {
+function SettingsPage({ theme, setTheme }: { theme: string; setTheme: React.Dispatch<React.SetStateAction<string>> }) {
   const { signOut } = useAuthActions();
   const { isAuthenticated } = useConvexAuth();
 
@@ -104,40 +116,64 @@ function SettingsPage() {
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <div className="px-4 lg:px-6">
             <div className="max-w-2xl mx-auto space-y-6">
-              <div className="bg-card p-6 rounded-lg border">
-                <h2 className="text-lg font-semibold mb-4">Account</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium">Status</label>
-                    <p className="text-sm text-muted-foreground">
-                      {isAuthenticated ? "Signed in" : "Not signed in"}
-                    </p>
+              {/* Theme Switcher Card */}
+              <Card>
+                <CardTitle className="pl-4">Theme</CardTitle>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    {themes.map((t) => (
+                      <Button
+                        key={t.name}
+                        variant={theme === t.name ? "default" : "outline"}
+                        onClick={() => setTheme(t.name)}
+                      >
+                        {t.name}
+                      </Button>
+                    ))}
                   </div>
-                  <div>
-                    <button
-                      onClick={() => void signOut()}
-                      className="bg-destructive text-destructive-foreground px-4 py-2 rounded-md text-sm hover:bg-destructive/90 transition-colors"
-                    >
-                      Sign Out
-                    </button>
+                </CardContent>
+              </Card>
+              {/* Account Section */}
+              <Card>
+                <CardTitle className="pl-4">Account</CardTitle>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium">Status</label>
+                      <p className="text-sm text-muted-foreground">
+                        {isAuthenticated ? "Signed in" : "Not signed in"}
+                      </p>
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => void signOut()}
+                        className="bg-destructive text-destructive-foreground px-4 py-2 rounded-md text-sm hover:bg-destructive/90 transition-colors"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              <div className="bg-card p-6 rounded-lg border">
-                <h2 className="text-lg font-semibold mb-4">Email Configuration</h2>
-                <p className="text-sm text-muted-foreground">
-                  Email settings are managed through your Resend account. 
-                  Visit <a href="https://resend.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">resend.com</a> to configure domains and API keys.
-                </p>
-              </div>
-
-              <div className="bg-card p-6 rounded-lg border">
-                <h2 className="text-lg font-semibold mb-4">About</h2>
-                <p className="text-sm text-muted-foreground">
-                  Demo application for testing Resend email delivery built with Convex, React, and shadcn/ui.
-                </p>
-              </div>
+                </CardContent>
+              </Card>
+              {/* Email Config Section */}
+              <Card>
+                <CardTitle className="pl-4">Email Configuration</CardTitle>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Email settings are managed through your Resend account. 
+                    Visit <a href="https://resend.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">resend.com</a> to configure domains and API keys.
+                  </p>
+                </CardContent>
+              </Card>
+              {/* About Section */}
+              <Card>
+                <CardTitle className="pl-4">About</CardTitle>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Demo application for testing Resend email delivery built with Convex, React, and shadcn/ui.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>

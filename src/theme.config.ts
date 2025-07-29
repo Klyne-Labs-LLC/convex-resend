@@ -1,0 +1,1 @@
+export const DEFAULT_THEME = import.meta.env.VITE_DEFAULT_THEME || "perpetuity";
