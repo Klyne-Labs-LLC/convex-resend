@@ -27,6 +27,7 @@ export const sendEmail = mutation({
       to: args.to,
       subject: args.subject,
       text: args.body,
+      replyTo: ["anian@klynelabs.com"],
     });
     await ctx.db.insert("emails", {
       userId,
