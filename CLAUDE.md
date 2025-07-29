@@ -94,3 +94,21 @@ This project follows the comprehensive Convex guidelines defined in `.cursor/rul
 - **NEVER modify `src/index.css`** - This file contains the project's design tokens and should remain untouched
 - Use only shadcn/ui components from `src/components/ui/` for all UI elements
 - No custom styling should be added outside of shadcn/ui components
+
+### Routing Structure
+The application uses React Router v6 for URL-based navigation:
+
+#### Available Routes
+- `/` - Redirects to `/dashboard`
+- `/dashboard` - Main dashboard with email stats and quick send
+- `/send-email` - Full email composer with advanced features
+- `/email-history` - Searchable list of sent emails with status tracking
+- `/analytics` - Comprehensive email performance metrics
+- `/resources` - Documentation and helpful links
+- `/settings` - Account management and configuration
+- `/help` - User support and troubleshooting guides
+
+#### Route Protection
+- All routes are protected by authentication
+- Unauthenticated users are redirected to sign-in form
+- Uses `ProtectedRoute` component wrapper for authentication checks
