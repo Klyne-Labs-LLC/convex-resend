@@ -5,7 +5,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 
 export const resend: Resend = new Resend(components.resend, {
-  testMode: true,
+  testMode: false,
   onEmailEvent: internal.emails.handleEmailEvent,
 });
 
