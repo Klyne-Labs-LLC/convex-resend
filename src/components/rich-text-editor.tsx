@@ -10,11 +10,23 @@ interface RichTextEditorProps {
   placeholder?: string;
   className?: string;
   onSelectionChange?: (start: number, end: number) => void;
+  onFormatStateChange?: (state: FormatState) => void; // NEW
+}
+
+export interface FormatState {
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
+  strikethrough: boolean;
+  orderedList: boolean;
+  unorderedList: boolean;
+  link: boolean;
 }
 
 export interface RichTextEditorRef {
-  applyFormatting: (command: string, value?: string) => void;
+  applyFormatting: (command: string, value?: string, previewText?: string) => void; // previewText for links
   focus: () => void;
+  getFormatState: () => FormatState;
 }
 
 export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(({ 
@@ -22,7 +34,8 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
   onChange, 
   placeholder = "Write your email message here...",
   className = "",
-  onSelectionChange 
+  onSelectionChange,
+  onFormatStateChange
 }, ref) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -93,36 +106,132 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
     onChange(markdownText);
   }, [onChange, convertHTMLToMarkdown]);
 
+  const getCurrentFormatState = useCallback((): FormatState => {
+    if (!editorRef.current) return {
+      bold: false, italic: false, underline: false, strikethrough: false, orderedList: false, unorderedList: false, link: false
+    };
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return {
+      bold: false, italic: false, underline: false, strikethrough: false, orderedList: false, unorderedList: false, link: false
+    };
+    let node = sel.anchorNode as HTMLElement | null;
+    if (node && node.nodeType === 3) node = node.parentElement;
+    let state: FormatState = {
+      bold: false,
+      italic: false,
+      underline: false,
+      strikethrough: false,
+      orderedList: false,
+      unorderedList: false,
+      link: false
+    };
+    let el = node;
+    while (el && el !== editorRef.current) {
+      const tag = el.tagName;
+      if (tag === 'B' || tag === 'STRONG') state.bold = true;
+      if (tag === 'I' || tag === 'EM') state.italic = true;
+      if (tag === 'U') state.underline = true;
+      if (tag === 'DEL' || tag === 'S') state.strikethrough = true;
+      if (tag === 'A') state.link = true;
+      if (tag === 'OL') state.orderedList = true;
+      if (tag === 'UL') state.unorderedList = true;
+      el = el.parentElement;
+    }
+    // Also check if inside a list item
+    el = node;
+    while (el && el !== editorRef.current) {
+      if (el.tagName === 'LI') {
+        if (el.parentElement?.tagName === 'OL') state.orderedList = true;
+        if (el.parentElement?.tagName === 'UL') state.unorderedList = true;
+      }
+      el = el.parentElement;
+    }
+    // DEBUG LOG
+    console.log('[RTE] getCurrentFormatState:', {
+      node: node ? node.tagName : null,
+      parent: node?.parentElement?.tagName,
+      state
+    });
+    return state;
+  }, []);
+
   // Handle selection changes for format button states
   const handleSelectionChange = useCallback(() => {
-    if (editorRef.current && onSelectionChange) {
-      const selection = window.getSelection();
-      if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        if (editorRef.current.contains(range.startContainer)) {
-          // You can add logic here to determine active formats
-          onSelectionChange(0, 0); // Simplified for now
+    if (editorRef.current) {
+      if (onSelectionChange) {
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          if (editorRef.current.contains(range.startContainer)) {
+            onSelectionChange(0, 0); // (legacy, can be improved)
+          }
+        }
+      }
+      if (typeof onFormatStateChange === 'function') {
+        onFormatStateChange(getCurrentFormatState());
+      }
+    }
+  }, [onSelectionChange, onFormatStateChange, getCurrentFormatState]);
+
+  // Handle keyboard shortcuts and list Enter/Backspace
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Handle Enter in lists
+    if (e.key === 'Enter') {
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        const range = sel.getRangeAt(0);
+        let li = range.startContainer as HTMLElement;
+        while (li && li.nodeType === 3) li = li.parentElement!;
+        if (li && li.tagName === 'LI') {
+          // If the list item is empty, exit the list
+          if (li.textContent === '' || li.textContent === '\u200B') {
+            e.preventDefault();
+            // Move caret after the list
+            const parent = li.parentElement;
+            if (parent) {
+              const after = document.createElement('div');
+              after.innerHTML = '<br>';
+              parent.insertAdjacentElement('afterend', after);
+              const newRange = document.createRange();
+              newRange.setStart(after, 0);
+              newRange.collapse(true);
+              sel.removeAllRanges();
+              sel.addRange(newRange);
+              // Remove the empty li
+              li.remove();
+              return;
+            }
+          }
         }
       }
     }
-  }, [onSelectionChange]);
-
-  // Handle keyboard shortcuts
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-    // Handle Enter key for line breaks
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      document.execCommand('insertHTML', false, '<br><br>');
-      return;
+    // Handle Backspace at start of list item
+    if (e.key === 'Backspace') {
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        const range = sel.getRangeAt(0);
+        let li = range.startContainer as HTMLElement;
+        while (li && li.nodeType === 3) li = li.parentElement!;
+        if (li && li.tagName === 'LI') {
+          // If caret is at start
+          if (range.startOffset === 0) {
+            e.preventDefault();
+            // Convert to paragraph
+            const p = document.createElement('div');
+            p.innerHTML = li.innerHTML || '<br>';
+            li.parentElement?.insertAdjacentElement('afterend', p);
+            li.remove();
+            // Move caret to new div
+            const newRange = document.createRange();
+            newRange.setStart(p, 0);
+            newRange.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(newRange);
+            return;
+          }
+        }
+      }
     }
-
-    // Handle Tab key
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      document.execCommand('insertHTML', false, '&nbsp;&nbsp;&nbsp;&nbsp;');
-      return;
-    }
-
     // Let formatting shortcuts pass through
     if (e.ctrlKey || e.metaKey) {
       return;
@@ -137,11 +246,9 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
   }, []);
 
   // Apply formatting at cursor position
-  const applyFormatting = useCallback((command: string, value?: string) => {
+  const applyFormatting = useCallback((command: string, value?: string, previewText?: string) => {
     if (!editorRef.current) return;
-
     editorRef.current.focus();
-    
     switch (command) {
       case 'bold':
         document.execCommand('bold', false);
@@ -157,7 +264,28 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
         break;
       case 'insertLink':
         if (value) {
-          document.execCommand('createLink', false, value);
+          // If previewText is provided, insert as <a href=value>previewText</a>
+          if (previewText) {
+            const sel = window.getSelection();
+            if (sel && sel.rangeCount > 0) {
+              const range = sel.getRangeAt(0);
+              range.deleteContents();
+              const a = document.createElement('a');
+              a.href = value;
+              a.target = '_blank';
+              a.rel = 'noopener noreferrer';
+              a.className = 'text-blue-600 hover:underline';
+              a.textContent = previewText;
+              range.insertNode(a);
+              // Move caret after link
+              range.setStartAfter(a);
+              range.collapse(true);
+              sel.removeAllRanges();
+              sel.addRange(range);
+            }
+          } else {
+            document.execCommand('createLink', false, value);
+          }
         }
         break;
       case 'insertUnorderedList':
@@ -167,15 +295,66 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
         document.execCommand('insertOrderedList', false);
         break;
     }
-
-    // Update the parent component with the new content
+    // Always update the parent component with the new content and format state
     setTimeout(() => {
       if (editorRef.current) {
         const markdownText = convertHTMLToMarkdown(editorRef.current.innerHTML);
         onChange(markdownText);
+        if (typeof onFormatStateChange === 'function') {
+          const state = getCurrentFormatState();
+          onFormatStateChange(state);
+          // DEBUG LOG
+          const sel = window.getSelection();
+          let node = sel && sel.rangeCount > 0 ? sel.anchorNode : null;
+          if (node && node.nodeType === 3) node = node.parentElement;
+          console.log('[RTE] applyFormatting:', {
+            command,
+            html: editorRef.current.innerHTML,
+            selectionNode: node ? node.tagName : null,
+            parent: node?.parentElement?.tagName,
+            state
+          });
+        }
+        // Special handling for lists: ensure caret is inside a <li>
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0) {
+          let node = sel.anchorNode as HTMLElement | null;
+          if (node && node.nodeType === 3) node = node.parentElement;
+          let foundLI = false;
+          let el = node;
+          while (el && el !== editorRef.current) {
+            if (el.tagName === 'LI') {
+              foundLI = true;
+              break;
+            }
+            el = el.parentElement;
+          }
+          if (!foundLI) {
+            // Try to move caret into the first <li> if a list was just created
+            const list = editorRef.current.querySelector('ul,ol');
+            if (list && list.firstChild && list.firstChild.nodeName === 'LI') {
+              const li = list.firstChild as HTMLElement;
+              const range = document.createRange();
+              range.selectNodeContents(li);
+              range.collapse(true);
+              sel.removeAllRanges();
+              sel.addRange(range);
+              if (typeof onFormatStateChange === 'function') {
+                const state = getCurrentFormatState();
+                onFormatStateChange(state);
+                // DEBUG LOG
+                console.log('[RTE] moved caret into <li>:', {
+                  html: editorRef.current.innerHTML,
+                  li,
+                  state
+                });
+              }
+            }
+          }
+        }
       }
     }, 0);
-  }, [onChange, convertHTMLToMarkdown]);
+  }, [onChange, convertHTMLToMarkdown, onFormatStateChange, getCurrentFormatState]);
 
   const focusEditor = useCallback(() => {
     if (editorRef.current) {
@@ -186,8 +365,9 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
   // Expose methods via ref
   useImperativeHandle(ref, () => ({
     applyFormatting,
-    focus: focusEditor
-  }), [applyFormatting, focusEditor]);
+    focus: focusEditor,
+    getFormatState: getCurrentFormatState
+  }), [applyFormatting, focusEditor, getCurrentFormatState]);
 
   // Set up selection change listener
   useEffect(() => {

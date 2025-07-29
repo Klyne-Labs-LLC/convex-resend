@@ -32,7 +32,7 @@ import { useEmailComposer } from "@/hooks/use-email-composer";
 import { EmailTemplateService } from "@/services/email-templates";
 import { RecipientManagementService } from "@/services/recipient-management";
 import { KeyboardShortcutsService } from "@/services/keyboard-shortcuts";
-import { RichTextEditor, RichTextEditorRef } from "@/components/rich-text-editor";
+import { RichTextEditor, RichTextEditorRef, FormatState } from "@/components/rich-text-editor";
 
 export function SendEmailPage() {
   const { state, actions, textareaRef, editorRef } = useEmailComposer();
@@ -44,6 +44,16 @@ export function SendEmailPage() {
   const [linkUrl, setLinkUrl] = useState("");
   const [linkText, setLinkText] = useState("");
   const [showLinkDialog, setShowLinkDialog] = useState(false);
+  // NEW: Track formatting state from RichTextEditor
+  const [editorFormats, setEditorFormats] = useState<FormatState>({
+    bold: false,
+    italic: false,
+    underline: false,
+    strikethrough: false,
+    orderedList: false,
+    unorderedList: false,
+    link: false
+  });
 
   const testEmails = [
     "delivered@resend.dev",
@@ -100,6 +110,11 @@ export function SendEmailPage() {
   const handleFormatting = useCallback((format: 'bold' | 'italic' | 'underline' | 'strikethrough') => {
     if (richTextEditorRef.current) {
       richTextEditorRef.current.applyFormatting(format);
+      setTimeout(() => {
+        if (richTextEditorRef.current) {
+          setEditorFormats(richTextEditorRef.current.getFormatState());
+        }
+      }, 0);
     } else {
       actions.applyFormatting(format);
     }
@@ -109,6 +124,11 @@ export function SendEmailPage() {
     if (richTextEditorRef.current) {
       const command = type === 'bullet' ? 'insertUnorderedList' : 'insertOrderedList';
       richTextEditorRef.current.applyFormatting(command);
+      setTimeout(() => {
+        if (richTextEditorRef.current) {
+          setEditorFormats(richTextEditorRef.current.getFormatState());
+        }
+      }, 0);
     } else {
       const position = textareaRef.current?.selectionStart || 0;
       actions.insertList(type, position);
@@ -315,7 +335,7 @@ export function SendEmailPage() {
                                 <TooltipTrigger asChild>
                                   <Button
                                     type="button"
-                                    variant={state.activeFormats.has('bold') ? 'default' : 'ghost'}
+                                    variant={editorFormats.bold ? 'default' : 'ghost'}
                                     size="sm"
                                     onClick={() => handleFormatting('bold')}
                                   >
@@ -328,7 +348,7 @@ export function SendEmailPage() {
                                 <TooltipTrigger asChild>
                                   <Button
                                     type="button"
-                                    variant={state.activeFormats.has('italic') ? 'default' : 'ghost'}
+                                    variant={editorFormats.italic ? 'default' : 'ghost'}
                                     size="sm"
                                     onClick={() => handleFormatting('italic')}
                                   >
@@ -341,7 +361,7 @@ export function SendEmailPage() {
                                 <TooltipTrigger asChild>
                                   <Button
                                     type="button"
-                                    variant={state.activeFormats.has('underline') ? 'default' : 'ghost'}
+                                    variant={editorFormats.underline ? 'default' : 'ghost'}
                                     size="sm"
                                     onClick={() => handleFormatting('underline')}
                                   >
@@ -354,7 +374,7 @@ export function SendEmailPage() {
                                 <TooltipTrigger asChild>
                                   <Button
                                     type="button"
-                                    variant={state.activeFormats.has('strikethrough') ? 'default' : 'ghost'}
+                                    variant={editorFormats.strikethrough ? 'default' : 'ghost'}
                                     size="sm"
                                     onClick={() => handleFormatting('strikethrough')}
                                   >
@@ -443,6 +463,7 @@ export function SendEmailPage() {
                               onChange={actions.setMessage}
                               placeholder="Write your email message here..."
                               className="border-0 focus:ring-0"
+                              onFormatStateChange={setEditorFormats}
                             />
                           </div>
 

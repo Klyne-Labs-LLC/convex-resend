@@ -88,7 +88,7 @@ export function AppSidebar({ activeSection = "dashboard", ...props }: AppSidebar
             >
               <Link to="/dashboard">
                 <IconMail className="!size-5" />
-                <span className="text-base font-semibold">📧 Resend Email Testing</span>
+                <span className="text-base font-semibold">Klyne Labs - Pulse</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
