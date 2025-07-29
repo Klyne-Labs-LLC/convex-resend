@@ -89,3 +89,8 @@ This project follows the comprehensive Convex guidelines defined in `.cursor/rul
 - Vite config includes Tailwind CSS plugin and path alias (`@` -> `./src`)
 - ESLint configured with React hooks and refresh plugins
 - TypeScript strict mode enabled with modern module resolution
+
+### Design System Guidelines
+- **NEVER modify `src/index.css`** - This file contains the project's design tokens and should remain untouched
+- Use only shadcn/ui components from `src/components/ui/` for all UI elements
+- No custom styling should be added outside of shadcn/ui components
