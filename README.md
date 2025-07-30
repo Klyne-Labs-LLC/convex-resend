@@ -401,6 +401,6 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 ---
 
-**© 2024 Klyne Labs LLC. All rights reserved.**
+**© 2025 Klyne Labs LLC. All rights reserved.**
 
 *Enterprise-grade solutions for modern development teams.*
