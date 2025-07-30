@@ -19,9 +19,14 @@ import { useThemeLoader } from "@/hooks/use-theme-loader";
 import { DEFAULT_THEME } from "@/theme.config";
 
 export default function App() {
-  // Global theme state
-  const [theme, setTheme] = React.useState(() => localStorage.getItem("theme") || DEFAULT_THEME);
+  // Global theme state with immediate default theme loading
+  const [theme, setTheme] = React.useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme || DEFAULT_THEME;
+  });
+  
   useThemeLoader(theme);
+  
   React.useEffect(() => {
     localStorage.setItem("theme", theme);
   }, [theme]);

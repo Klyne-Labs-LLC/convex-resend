@@ -6,7 +6,8 @@
       "Bash(npm run build:*)",
       "Bash(npx tsc:*)",
       "Bash(npm install:*)",
-      "Bash(timeout 10s npm run dev:frontend:*)"
+      "Bash(timeout 10s npm run dev:frontend:*)",
+      "Bash(pkill:*)"
     ],
     "deny": []
   }
