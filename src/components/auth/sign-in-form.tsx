@@ -73,17 +73,19 @@ export function SignInForm() {
                 </p>
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  name="name"
-                  placeholder="Your full name"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
+              {flow === "signUp" && (
+                <div className="space-y-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    name="name"
+                    placeholder="Your full name"
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
+              )}
               
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
