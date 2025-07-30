@@ -64,7 +64,7 @@ A comprehensive email testing and management platform built with **Convex** and 
 
 1. **Clone and install dependencies:**
 ```bash
-git clone <repository-url>
+git clone https://github.com/Klyne-Labs-LLC/pulse-engine.git
 cd resend-demo
 npm install
 ```
