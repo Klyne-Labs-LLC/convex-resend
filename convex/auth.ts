@@ -1,6 +1,7 @@
 import { convexAuth } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
 import { DataModel } from "./_generated/dataModel";
+import { query } from "./_generated/server";
 
 const password = Password<DataModel>({
   profile(params) {
@@ -13,4 +14,11 @@ const password = Password<DataModel>({
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [password],
+});
+
+export const currentUser = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.auth.getUserIdentity();
+  },
 });

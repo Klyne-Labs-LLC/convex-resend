@@ -27,7 +27,7 @@ export function useThemeLoader(theme: string) {
       document.head.appendChild(link);
     };
     
-    loadTheme();
+    void loadTheme();
 
     // Also apply theme class to html element for better scoping
     document.documentElement.setAttribute('data-theme', selectedTheme);

@@ -9,6 +9,8 @@ import {
   IconBook,
 } from "@tabler/icons-react"
 import { Link } from "react-router-dom"
+import { useConvexAuth, useQuery } from "convex/react"
+import { api } from "../../convex/_generated/api"
 
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
@@ -70,12 +72,24 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ activeSection: _activeSection = "dashboard", ...props }: AppSidebarProps) {
-  // For now, use placeholder data. In a real app, you'd get this from auth context
-  const userData = {
-    name: "Email User",
-    email: "user@resend.dev", 
-    avatar: "/avatars/user.jpg",
-  };
+  const { isAuthenticated } = useConvexAuth()
+  const currentUser = useQuery(api.auth.currentUser)
+  
+  // Get user data from auth context or fallback to placeholder
+  const userData = React.useMemo(() => {
+    if (isAuthenticated && currentUser) {
+      return {
+        name: currentUser.name || "User",
+        email: currentUser.email || "user@example.com",
+        avatar: `/avatars/${currentUser.name?.charAt(0).toLowerCase() || 'u'}.jpg`,
+      }
+    }
+    return {
+      name: "Email User",
+      email: "user@resend.dev", 
+      avatar: "/avatars/user.jpg",
+    }
+  }, [isAuthenticated, currentUser])
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
