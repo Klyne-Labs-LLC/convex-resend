@@ -131,6 +131,7 @@ function SettingsPage({ theme, setTheme }: { theme: string; setTheme: React.Disp
                         key={t.name}
                         variant={theme === t.name ? "default" : "outline"}
                         onClick={() => setTheme(t.name)}
+                        className="capitalize"
                       >
                         {t.name}
                       </Button>
