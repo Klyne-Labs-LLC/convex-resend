@@ -123,8 +123,8 @@ export class EmailFormattingService {
     const currentLineText = lines[currentLine];
     
     // If line already has list formatting, remove it
-    if (currentLineText.match(/^[\s]*[•\-\*][\s]/) || currentLineText.match(/^[\s]*\d+\.[\s]/)) {
-      lines[currentLine] = currentLineText.replace(/^[\s]*([•\-\*]|\d+\.)[\s]/, '');
+    if (currentLineText.match(/^[\s]*[•\-*][\s]/) || currentLineText.match(/^[\s]*\d+\.[\s]/)) {
+      lines[currentLine] = currentLineText.replace(/^[\s]*([•\-*]|\d+\.)[\s]/, '');
     } else {
       // Add list formatting
       lines[currentLine] = listPrefix + currentLineText;
@@ -168,7 +168,7 @@ export class EmailFormattingService {
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
     
     // Convert bullet lists
-    html = html.replace(/^[\s]*[•\-\*][\s](.*)$/gm, '<li>$1</li>');
+    html = html.replace(/^[\s]*[•\-*][\s](.*)$/gm, '<li>$1</li>');
     html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
     
     // Convert numbered lists
@@ -217,7 +217,7 @@ export class EmailFormattingService {
     plainText = plainText.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'); // Links
     
     // Remove list formatting
-    plainText = plainText.replace(/^[\s]*[•\-\*][\s]/gm, '');
+    plainText = plainText.replace(/^[\s]*[•\-*][\s]/gm, '');
     plainText = plainText.replace(/^[\s]*\d+\.[\s]/gm, '');
     
     return plainText;

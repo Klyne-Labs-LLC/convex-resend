@@ -1,22 +1,35 @@
 import { useLocation } from "react-router-dom"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ThemeToggle } from "@/components/theme-toggle"
+import {
+  IconChartBar,
+  IconDashboard,
+  IconHelp,
+  IconMail,
+  IconMailOpened,
+  IconSettings,
+  IconBook,
+} from "@tabler/icons-react"
 
-const routeTitles: Record<string, string> = {
-  '/dashboard': '📊 Dashboard',
-  '/send-email': '📧 Send Email',
-  '/email-history': '📂 Email History',
-  '/analytics': '📈 Analytics',
-  '/settings': '⚙️ Settings',
-  '/resources': '📚 Resources',
-  '/help': '❓ Help & Support',
+interface RouteTitle {
+  title: string;
+  icon: React.ReactNode;
+}
+
+const routeTitles: Record<string, RouteTitle> = {
+  '/dashboard': { title: 'Dashboard', icon: <IconDashboard className="h-4 w-4 mr-2" /> },
+  '/send-email': { title: 'Send Email', icon: <IconMail className="h-4 w-4 mr-2" /> },
+  '/email-history': { title: 'Email History', icon: <IconMailOpened className="h-4 w-4 mr-2" /> },
+  '/analytics': { title: 'Analytics', icon: <IconChartBar className="h-4 w-4 mr-2" /> },
+  '/settings': { title: 'Settings', icon: <IconSettings className="h-4 w-4 mr-2" /> },
+  '/resources': { title: 'Resources', icon: <IconBook className="h-4 w-4 mr-2" /> },
+  '/help': { title: 'Get Help', icon: <IconHelp className="h-4 w-4 mr-2" /> },
 }
 
 export function SiteHeader() {
   const location = useLocation()
-  const currentTitle = routeTitles[location.pathname] || '📧 Resend Email Testing'
+  const currentRoute = routeTitles[location.pathname] || { title: 'Resend Email Testing', icon: <IconMail className="h-4 w-4 mr-2" /> }
 
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -26,7 +39,10 @@ export function SiteHeader() {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
-        <h1 className="text-base font-medium">{currentTitle}</h1>
+        <h1 className="text-base font-medium flex items-center">
+          {currentRoute.icon}
+          {currentRoute.title}
+        </h1>
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
         </div>

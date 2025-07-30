@@ -11,7 +11,7 @@ import { SendEmailPage } from "@/components/pages/send-email-page";
 import { EmailHistoryPage } from "@/components/pages/email-history-page";
 import { AnalyticsPage } from "@/components/pages/analytics-page";
 import { ResourcesPage } from "@/components/pages/resources-page";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { themes } from "@/themes";

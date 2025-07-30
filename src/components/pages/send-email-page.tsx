@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -30,12 +28,11 @@ import {
 
 import { useEmailComposer } from "@/hooks/use-email-composer";
 import { EmailTemplateService } from "@/services/email-templates";
-import { RecipientManagementService } from "@/services/recipient-management";
 import { KeyboardShortcutsService } from "@/services/keyboard-shortcuts";
 import { RichTextEditor, RichTextEditorRef, FormatState } from "@/components/rich-text-editor";
 
 export function SendEmailPage() {
-  const { state, actions, textareaRef, editorRef } = useEmailComposer();
+  const { state, actions, textareaRef } = useEmailComposer();
   const richTextEditorRef = useRef<RichTextEditorRef>(null);
   const [activeTab, setActiveTab] = useState<"compose" | "templates">("compose");
   const [toInput, setToInput] = useState("");
@@ -177,7 +174,10 @@ export function SendEmailPage() {
                   <TabsContent value="compose">
                     <Card>
                       <CardContent className="p-0">
-                        <form onSubmit={handleSendEmail} className="space-y-0">
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          void handleSendEmail(e);
+                        }} className="space-y-0">
                           {/* Email Header */}
                           <div className="border-b p-4 space-y-3">
                             {/* To Field */}

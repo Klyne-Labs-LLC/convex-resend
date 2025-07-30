@@ -15,6 +15,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run lint` - TypeScript check and ESLint with strict settings (max 0 warnings)
 - `npm run preview` - Preview the built application
 
+### Testing Commands
+No test framework is currently configured. To add testing capabilities, consider adding Jest, Vitest, or another testing framework.
+
 ### Setup Commands
 - `npx @convex-dev/auth` - Configure Convex Auth environment variables
 - `npx convex env set RESEND_API_KEY "<your-api-key>"` - Set Resend API key
@@ -95,14 +98,18 @@ This project follows the comprehensive Convex guidelines defined in `.cursor/rul
 
 ### Development Notes
 - The `setup.mjs` script runs `npx @convex-dev/auth` automatically during `predev`
+- Auto-discovery of theme files using Vite's `import.meta.glob` for dynamic theming
 - Vite config includes Tailwind CSS plugin and path alias (`@` -> `./src`)
 - ESLint configured with React hooks and refresh plugins
 - TypeScript strict mode enabled with modern module resolution
+- Theme switching implemented with localStorage persistence and CSS file loading
 
 ### Design System Guidelines
 - **NEVER modify `src/index.css`** - This file contains the project's design tokens and should remain untouched
 - Use only shadcn/ui components from `src/components/ui/` for all UI elements
 - No custom styling should be added outside of shadcn/ui components
+- Theme files are auto-discovered from `src/themes/` directory using CSS file naming convention
+- New themes should be added as `.css` files in `src/themes/` and will be automatically available
 
 ### Routing Structure
 The application uses React Router v6 for URL-based navigation:
@@ -121,3 +128,15 @@ The application uses React Router v6 for URL-based navigation:
 - All routes are protected by authentication
 - Unauthenticated users are redirected to sign-in form
 - Uses `ProtectedRoute` component wrapper for authentication checks
+
+## Important Implementation Notes
+
+### Email Domain Requirements
+- Users must sign in with an email address from a domain verified in Resend
+- The `from` field in emails uses the authenticated user's email and name
+- Reply-to is hardcoded to `anian@klynelabs.com` in `convex/emails.ts:30`
+
+### Environment Setup Process
+- `setup.mjs` automatically runs during `predev` to configure Convex Auth
+- Script prevents duplicate execution using `.env.local` flag (`SETUP_SCRIPT_RAN=1`)
+- Requires manual environment variable setup for Resend API key and webhook secret

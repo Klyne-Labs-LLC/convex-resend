@@ -1,5 +1,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { 
+  IconRocket as RocketIcon,
+  IconMail as MailIcon,
+  IconShieldLock as ShieldLockIcon,
+  IconLink as LinkIcon,
+  IconPalette as PaletteIcon,
+  IconBrush as BrushIcon
+} from "@tabler/icons-react";
 
 export function ResourcesPage() {
   const resources = [
@@ -8,42 +16,42 @@ export function ResourcesPage() {
       description: "Read comprehensive documentation for all Convex features and learn how to build full-stack applications.",
       href: "https://docs.convex.dev/home",
       category: "Backend",
-      icon: "🏗️"
+      icon: <RocketIcon className="h-5 w-5" />
     },
     {
       title: "Resend Email Service",
       description: "Resend is a modern email service that provides a simple API for sending transactional emails at scale.",
       href: "https://resend.com/",
       category: "Email",
-      icon: "📧"
+      icon: <MailIcon className="h-5 w-5" />
     },
     {
       title: "Convex Auth",
       description: "Convex Auth is a modern authentication library that integrates seamlessly with Convex backend.",
       href: "https://labs.convex.dev/auth/",
       category: "Authentication",
-      icon: "🔐"
+      icon: <ShieldLockIcon className="h-5 w-5" />
     },
     {
       title: "Resend Component",
       description: "Official Resend component for Convex that handles email queuing, batching, and delivery tracking.",
       href: "https://www.convex.dev/components/resend",
       category: "Integration",
-      icon: "🔗"
+      icon: <LinkIcon className="h-5 w-5" />
     },
     {
       title: "shadcn/ui Components",
       description: "Beautiful and accessible React components built with Radix UI and Tailwind CSS.",
       href: "https://ui.shadcn.com/",
       category: "UI",
-      icon: "🎨"
+      icon: <PaletteIcon className="h-5 w-5" />
     },
     {
       title: "Tailwind CSS",
       description: "A utility-first CSS framework for rapidly building custom user interfaces.",
       href: "https://tailwindcss.com/",
       category: "Styling",
-      icon: "🎭"
+      icon: <BrushIcon className="h-5 w-5" />
     }
   ];
 
@@ -63,6 +71,9 @@ export function ResourcesPage() {
                     .map((resource) => (
                       <Card key={resource.title} className="hover:shadow-md transition-shadow">
                         <CardHeader>
+                          <div className="text-2xl mb-2 text-primary">
+                            {resource.icon}
+                          </div>
                           <CardTitle className="text-base">{resource.title}</CardTitle>
                           <CardDescription>
                             {resource.description}

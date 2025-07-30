@@ -127,7 +127,7 @@ export function useEmailComposer() {
     updateState({ message, error: null });
   }, [updateState]);
 
-  const applyFormatting = useCallback((format: FormatType, selection?: TextSelection) => {
+  const applyFormatting = useCallback((format: FormatType, _selection?: TextSelection) => {
     if (!editorRef.current) return;
     
     const editor = editorRef.current as any;
@@ -211,6 +211,23 @@ export function useEmailComposer() {
     return EmailValidationService.validateComposition(state.recipients, state.subject, state.message);
   }, [state.recipients, state.subject, state.message]);
 
+  const clearForm = useCallback(() => {
+    updateState({
+      recipients: { to: [], cc: [], bcc: [] },
+      subject: '',
+      message: '',
+      priority: 'normal',
+      requestReceipt: false,
+      confidential: false,
+      scheduleTime: '',
+      showCC: false,
+      showBCC: false,
+      error: null,
+      success: false,
+      activeFormats: new Set()
+    });
+  }, [updateState]);
+
   // Actions
   const sendEmail = useCallback(async () => {
     const validation = validateForm();
@@ -248,28 +265,12 @@ export function useEmailComposer() {
         isSending: false 
       });
     }
-  }, [validateForm, sendEmailMutation, state.recipients, state.subject, state.message, updateState]);
+  }, [validateForm, sendEmailMutation, state.recipients, state.subject, state.message, updateState, clearForm]);
 
   const saveDraft = useCallback(() => {
     // TODO: Implement draft saving
     console.log('Saving draft...');
   }, []);
-
-  const clearForm = useCallback(() => {
-    updateState({
-      recipients: { to: [], cc: [], bcc: [] },
-      subject: '',
-      message: '',
-      priority: 'normal',
-      requestReceipt: false,
-      confidential: false,
-      scheduleTime: '',
-      showCC: false,
-      showBCC: false,
-      error: null,
-      activeFormats: new Set()
-    });
-  }, [updateState]);
 
   const loadTemplate = useCallback((template: EmailTemplate, variables?: Record<string, string>) => {
     const applied = EmailTemplateService.applyTemplate(template, variables);
@@ -280,11 +281,11 @@ export function useEmailComposer() {
   }, [updateState]);
 
   // Keyboard shortcuts
-  const handleKeyboardShortcut = useCallback((action: ShortcutAction, event: KeyboardEvent) => {
+  const handleKeyboardShortcut = useCallback((action: ShortcutAction, _event: KeyboardEvent) => {
     switch (action) {
       case 'send':
         if (!state.isSending) {
-          sendEmail();
+          void sendEmail();
         }
         break;
       case 'save_draft':

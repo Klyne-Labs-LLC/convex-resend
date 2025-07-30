@@ -40,14 +40,6 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
   const editorRef = useRef<HTMLDivElement>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   
-  // Initialize editor content only once
-  useEffect(() => {
-    if (editorRef.current && !isInitialized && value) {
-      editorRef.current.innerHTML = convertMarkdownToHTML(value);
-      setIsInitialized(true);
-    }
-  }, [value, isInitialized]);
-
   // Convert markdown-like syntax to HTML for initial display
   const convertMarkdownToHTML = useCallback((text: string): string => {
     let html = text;
@@ -65,7 +57,7 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">$1</a>');
     
     // Convert bullet lists
-    html = html.replace(/^[\s]*[•\-\*][\s](.*)$/gm, '<li class="ml-4">• $1</li>');
+    html = html.replace(/^[\s]*[•\-*][\s](.*)$/gm, '<li class="ml-4">• $1</li>');
     
     // Convert numbered lists  
     html = html.replace(/^[\s]*\d+\.[\s](.*)$/gm, '<li class="ml-4">$1</li>');
@@ -75,6 +67,14 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
     
     return html;
   }, []);
+
+  // Initialize editor content only once
+  useEffect(() => {
+    if (editorRef.current && !isInitialized && value) {
+      editorRef.current.innerHTML = convertMarkdownToHTML(value);
+      setIsInitialized(true);
+    }
+  }, [value, isInitialized, convertMarkdownToHTML]);
 
   // Convert HTML back to markdown for storage
   const convertHTMLToMarkdown = useCallback((html: string): string => {
@@ -116,7 +116,7 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
     };
     let node = sel.anchorNode as HTMLElement | null;
     if (node && node.nodeType === 3) node = node.parentElement;
-    let state: FormatState = {
+    const state: FormatState = {
       bold: false,
       italic: false,
       underline: false,
@@ -310,7 +310,7 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
           console.log('[RTE] applyFormatting:', {
             command,
             html: editorRef.current.innerHTML,
-            selectionNode: node ? node.tagName : null,
+            selectionNode: node && 'tagName' in node ? (node as Element).tagName : null,
             parent: node?.parentElement?.tagName,
             state
           });
@@ -407,7 +407,7 @@ export const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>
         </div>
       )}
       
-      <style jsx>{`
+      <style>{`
         [contenteditable]:empty:before {
           content: attr(data-placeholder);
           color: #6b7280;

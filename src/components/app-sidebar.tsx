@@ -69,7 +69,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   activeSection?: string;
 }
 
-export function AppSidebar({ activeSection = "dashboard", ...props }: AppSidebarProps) {
+export function AppSidebar({ activeSection: _activeSection = "dashboard", ...props }: AppSidebarProps) {
   // For now, use placeholder data. In a real app, you'd get this from auth context
   const userData = {
     name: "Email User",

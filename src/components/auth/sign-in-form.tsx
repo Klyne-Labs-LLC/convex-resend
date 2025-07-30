@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { IconMail as MailIcon } from "@tabler/icons-react";
 
 export function SignInForm() {
   const { signIn } = useAuthActions();
@@ -16,7 +17,10 @@ export function SignInForm() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">📧 Resend Email Testing</h1>
+          <div className="flex items-center justify-center space-x-2">
+            <MailIcon className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold">Resend Email Testing</h1>
+          </div>
           <p className="text-muted-foreground">
             Sign in to start testing email delivery
           </p>
@@ -35,7 +39,7 @@ export function SignInForm() {
           <CardContent>
             <form
               className="space-y-4"
-              onSubmit={async (e) => {
+              onSubmit={(e) => {
                 e.preventDefault();
                 setError(null);
                 setIsLoading(true);
@@ -43,13 +47,15 @@ export function SignInForm() {
                 const formData = new FormData(e.target as HTMLFormElement);
                 formData.set("flow", flow);
                 
-                try {
-                  await signIn("password", formData);
-                } catch (error: any) {
-                  setError(error.message || "An error occurred during sign in");
-                } finally {
-                  setIsLoading(false);
-                }
+                void (async () => {
+                  try {
+                    await signIn("password", formData);
+                  } catch (error: any) {
+                    setError(error.message || "An error occurred during sign in");
+                  } finally {
+                    setIsLoading(false);
+                  }
+                })();
               }}
             >
               <div className="space-y-2">

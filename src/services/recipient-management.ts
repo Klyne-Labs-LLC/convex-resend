@@ -67,7 +67,7 @@ export class RecipientManagementService {
     // Add to destination field
     try {
       newRecipients = this.addRecipient(newRecipients, toType, email);
-    } catch (error) {
+    } catch {
       // If adding fails, return original recipients
       return recipients;
     }

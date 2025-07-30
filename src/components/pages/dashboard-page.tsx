@@ -9,6 +9,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { 
+  IconMail as EmailIcon, 
+  IconCheck as CheckIcon, 
+  IconEye as EyeIcon, 
+  IconAlertCircle as AlertCircleIcon,
+  IconRocket as RocketIcon,
+  IconMailForward as MailForwardIcon,
+  IconInbox as InboxIcon,
+  IconTrash as TrashIcon,
+  IconMoodAngry as MoodAngryIcon,
+  IconGhost as GhostIcon
+} from "@tabler/icons-react";
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -62,7 +74,7 @@ export function DashboardPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Emails</CardTitle>
-                <span className="text-2xl">📧</span>
+                <EmailIcon className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stats.totalEmails}</div>
@@ -74,7 +86,7 @@ export function DashboardPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Delivery Rate</CardTitle>
-                <span className="text-2xl">✅</span>
+                <CheckIcon className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{deliveryRate}%</div>
@@ -86,7 +98,7 @@ export function DashboardPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Open Rate</CardTitle>
-                <span className="text-2xl">👀</span>
+                <EyeIcon className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{openRate}%</div>
@@ -98,7 +110,7 @@ export function DashboardPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Bounced</CardTitle>
-                <span className="text-2xl">❌</span>
+                <AlertCircleIcon className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stats.bounced}</div>
@@ -122,11 +134,14 @@ export function DashboardPage() {
                 {success && (
                   <Alert className="mb-4">
                     <AlertDescription>
-                      ✅ Email sent successfully!
+                      <CheckIcon className="h-4 w-4 text-green-500 mr-2" /> Email sent successfully!
                     </AlertDescription>
                   </Alert>
                 )}
-                <form onSubmit={handleQuickSend} className="space-y-4">
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  void handleQuickSend(e);
+                }} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="quick-email">To</Label>
@@ -161,7 +176,7 @@ export function DashboardPage() {
                           </>
                         ) : (
                           <>
-                            🚀 Send Quick Email
+                            <RocketIcon className="h-4 w-4 mr-2" /> Send Quick Email
                           </>
                         )}
                       </Button>
@@ -184,7 +199,7 @@ export function DashboardPage() {
                     onClick={() => navigate("/send-email")}
                     className="w-full"
                   >
-                    💌 Go to Full Email Composer
+                    <MailForwardIcon className="h-4 w-4 mr-2" /> Go to Full Email Composer
                   </Button>
                 </div>
               </CardContent>
@@ -207,7 +222,7 @@ export function DashboardPage() {
                   </div>
                 ) : emails.length === 0 ? (
                   <div className="text-center py-8">
-                    <span className="text-4xl mb-2 block">📭</span>
+                    <InboxIcon className="h-10 w-10 text-muted-foreground mb-2" />
                     <p className="text-muted-foreground">No emails sent yet</p>
                   </div>
                 ) : (
@@ -216,7 +231,7 @@ export function DashboardPage() {
                       <div key={email.emailId} className="flex items-center justify-between p-4 border rounded-lg">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-lg">📧</span>
+                            <EmailIcon className="h-4 w-4 text-muted-foreground" />
                             <h4 className="font-medium truncate">
                               {email.subject || "No subject"}
                             </h4>
@@ -231,44 +246,41 @@ export function DashboardPage() {
                         <Badge variant={
                           !email.status
                             ? "destructive"
-                            : email.complained
-                              ? "secondary"
-                              : email.opened
+                            : email.status === 'bounced'
+                              ? "destructive"
+                              : email.status === 'delivered'
                                 ? "default"
-                                : email.status === "delivered"
+                                : email.opened
                                   ? "default"
-                                  : email.status === "bounced"
+                                  : email.errorMessage
                                     ? "destructive"
-                                    : email.errorMessage
-                                      ? "destructive"
-                                      : "secondary"
+                                    : "secondary"
                         }>
                           <span className="mr-1">
                             {!email.status
-                              ? "🗑️"
-                              : email.complained
-                                ? "🤬"
-                                : email.opened
-                                  ? "👀"
-                                  : email.status === "delivered"
-                                    ? "✅"
-                                    : email.status === "bounced"
-                                      ? "👻"
-                                      : email.errorMessage
-                                        ? "❌"
-                                        : "⏳"}
+                              ? <TrashIcon className="h-4 w-4 text-muted-foreground" />
+                              : email.status === 'bounced'
+                                ? <MoodAngryIcon className="h-4 w-4 text-destructive" />
+                                : email.status === 'delivered'
+                                  ? <CheckIcon className="h-4 w-4 text-muted-foreground" />
+                                  : email.opened
+                                    ? <EyeIcon className="h-4 w-4 text-muted-foreground" />
+                                    : email.errorMessage
+                                      ? <AlertCircleIcon className="h-4 w-4 text-destructive" />
+                                      : <GhostIcon className="h-4 w-4 text-muted-foreground" />
+                            }
                           </span>
                           {!email.status
                             ? "Missing"
-                            : email.complained
-                              ? "Complained"
-                              : email.opened
-                                ? "Opened"
-                                : email.status === "bounced"
-                                  ? "Bounced"
-                                  : email.errorMessage
-                                    ? "Error"
-                                    : email.status}
+                            : email.status === 'bounced'
+                              ? "Bounced"
+                              : email.status === 'delivered'
+                                ? email.opened 
+                                  ? "Opened" 
+                                  : "Delivered"
+                                : email.errorMessage
+                                  ? "Error"
+                                  : email.status.charAt(0).toUpperCase() + email.status.slice(1)}
                         </Badge>
                       </div>
                     ))}

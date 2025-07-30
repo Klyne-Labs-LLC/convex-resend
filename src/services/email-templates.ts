@@ -313,11 +313,11 @@ Thank you,
             errors.push(`Template "${template.name}": ${validation.errors.join(', ')}`);
           }
         } catch (error) {
-          errors.push(`Failed to import template "${template.name}": ${error}`);
+          errors.push(`Failed to import template "${template.name}": ${String(error)}`);
         }
       }
     } catch (error) {
-      errors.push(`Failed to parse JSON: ${error}`);
+      errors.push(`Failed to parse JSON: ${String(error)}`);
     }
     
     return { success, errors };
@@ -330,7 +330,7 @@ Thank you,
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       return stored ? JSON.parse(stored) : [];
-    } catch (error) {
+    } catch {
       return [];
     }
   }
