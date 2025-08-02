@@ -6,10 +6,11 @@ import { useConvexAuth } from "convex/react";
 
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
-import { DashboardPage } from "@/components/pages/dashboard-page";
-import { SendEmailPage } from "@/components/pages/send-email-page";
-import { EmailHistoryPage } from "@/components/pages/email-history-page";
-import { AnalyticsPage } from "@/components/pages/analytics-page";
+import { TodayPage } from "@/components/pages/today-page";
+import { ShelvesPage } from "@/components/pages/shelves-page";
+import { CirclesPage } from "@/components/pages/circles-page";
+import { DiscoverPage } from "@/components/pages/discover-page";
+import { ProfilePage } from "@/components/pages/profile-page";
 import { ResourcesPage } from "@/components/pages/resources-page";
 import React from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
@@ -42,7 +43,7 @@ export default function App() {
         element={
           <ProtectedRoute>
             <DashboardLayout>
-              <DashboardPage />
+              <TodayPage />
             </DashboardLayout>
           </ProtectedRoute>
         }
@@ -53,7 +54,7 @@ export default function App() {
         element={
           <ProtectedRoute>
             <DashboardLayout>
-              <SendEmailPage />
+              <ShelvesPage />
             </DashboardLayout>
           </ProtectedRoute>
         }
@@ -63,7 +64,7 @@ export default function App() {
         element={
           <ProtectedRoute>
             <DashboardLayout>
-              <EmailHistoryPage />
+              <CirclesPage />
             </DashboardLayout>
           </ProtectedRoute>
         }
@@ -73,7 +74,7 @@ export default function App() {
         element={
           <ProtectedRoute>
             <DashboardLayout>
-              <AnalyticsPage />
+              <DiscoverPage />
             </DashboardLayout>
           </ProtectedRoute>
         }
@@ -83,7 +84,7 @@ export default function App() {
         element={
           <ProtectedRoute>
             <DashboardLayout>
-              <AnalyticsPage />
+              <ProfilePage />
             </DashboardLayout>
           </ProtectedRoute>
         }
@@ -186,13 +187,13 @@ function SettingsPage({ theme, setTheme }: { theme: string; setTheme: React.Disp
                   </div>
                 </CardContent>
               </Card>
-              {/* Email Config Section */}
+              {/* Reading Config Section */}
               <Card>
-                <CardTitle className="pl-4">Email Configuration</CardTitle>
+                <CardTitle className="pl-4">Reading Configuration</CardTitle>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Email settings are managed through your Resend account. 
-                    Visit <a href="https://resend.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">resend.com</a> to configure domains and API keys.
+                    Reading preferences and circle settings can be customized in your Profile page. 
+                    Visit the <a href="/profile" className="text-primary hover:underline">Profile</a> section to manage your reading goals and notifications.
                   </p>
                 </CardContent>
               </Card>
@@ -201,7 +202,7 @@ function SettingsPage({ theme, setTheme }: { theme: string; setTheme: React.Disp
                 <CardTitle className="pl-4">About</CardTitle>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Demo application for testing Resend email delivery built with Convex, React, and shadcn/ui.
+                    Leaf Daily - A collaborative reading platform that transforms books into digestible daily experiences. Built with Convex, React, and shadcn/ui.
                   </p>
                 </CardContent>
               </Card>

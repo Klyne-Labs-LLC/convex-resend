@@ -1,10 +1,6 @@
 import * as React from "react"
 import {
-  IconChartBar,
-  IconDashboard,
   IconHelp,
-  IconMail,
-  IconMailOpened,
   IconSettings,
   IconBook,
   IconBook2,

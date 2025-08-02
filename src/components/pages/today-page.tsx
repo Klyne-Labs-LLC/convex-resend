@@ -5,10 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { 
   IconBook as BookIcon, 
-  IconCheck as CheckIcon, 
-  IconEye as EyeIcon, 
   IconFlame as FlameIcon,
-  IconRocket as RocketIcon,
   IconBooks as BooksIcon,
   IconBookmark as BookmarkIcon,
   IconUsers as UsersIcon,
@@ -17,7 +14,7 @@ import {
   IconTarget as TargetIcon
 } from "@tabler/icons-react";
 
-export function DashboardPage() {
+export function TodayPage() {
   const navigate = useNavigate();
   // Reinterpret email data as reading sessions
   const readingSessions = useQuery(api.emails.listMyEmailsAndStatuses);
@@ -39,20 +36,8 @@ export function DashboardPage() {
     totalHighlights: readingSessions?.filter(s => s.opened).length || 0,
   };
 
-  const recentActivity = readingSessions?.slice(0, 3).map((session, index) => {
-    const bookTitles = ["Atomic Habits", "1984", "The Alchemist"];
-    const authors = ["James Clear", "George Orwell", "Paulo Coelho"];
-    const activities = ["highlighted a passage", "joined discussion", "completed chapter"];
-    
-    return {
-      id: session.emailId,
-      book: bookTitles[index % bookTitles.length],
-      author: authors[index % authors.length],
-      activity: activities[index % activities.length],
-      time: session.sentAt,
-      status: session.status === "delivered" ? "completed" : "in-progress"
-    };
-  }) || [];
+  // Recent activity data (keeping for future use)
+  // const recentActivity = readingSessions?.slice(0, 3).map((session, index) => { ... });
 
 
   return (
