@@ -47,8 +47,9 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+      {/* New reading-focused routes */}
       <Route
-        path="/send-email"
+        path="/shelves"
         element={
           <ProtectedRoute>
             <DashboardLayout>
@@ -58,7 +59,7 @@ export default function App() {
         }
       />
       <Route
-        path="/email-history"
+        path="/circles"
         element={
           <ProtectedRoute>
             <DashboardLayout>
@@ -68,7 +69,7 @@ export default function App() {
         }
       />
       <Route
-        path="/analytics"
+        path="/discover"
         element={
           <ProtectedRoute>
             <DashboardLayout>
@@ -76,6 +77,30 @@ export default function App() {
             </DashboardLayout>
           </ProtectedRoute>
         }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <AnalyticsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Legacy routes for backwards compatibility */}
+      <Route
+        path="/send-email"
+        element={<Navigate to="/shelves" replace />}
+      />
+      <Route
+        path="/email-history"
+        element={<Navigate to="/circles" replace />}
+      />
+      <Route
+        path="/analytics"
+        element={<Navigate to="/discover" replace />}
       />
       <Route
         path="/resources"

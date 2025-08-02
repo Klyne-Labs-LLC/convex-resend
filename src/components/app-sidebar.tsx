@@ -7,6 +7,12 @@ import {
   IconMailOpened,
   IconSettings,
   IconBook,
+  IconBook2,
+  IconBooks,
+  IconUsers,
+  IconCompass,
+  IconUser,
+  IconHome,
 } from "@tabler/icons-react"
 import { Link } from "react-router-dom"
 import { useConvexAuth, useQuery } from "convex/react"
@@ -28,24 +34,29 @@ import {
 const data = {
   navMain: [
     {
-      title: "Dashboard",
+      title: "Today",
       url: "/dashboard",
-      icon: IconDashboard,
+      icon: IconHome,
     },
     {
-      title: "Send Email",
-      url: "/send-email",
-      icon: IconMail,
+      title: "My Shelves",
+      url: "/shelves",
+      icon: IconBooks,
     },
     {
-      title: "Email History",
-      url: "/email-history",
-      icon: IconMailOpened,
+      title: "Reading Circles",
+      url: "/circles",
+      icon: IconUsers,
     },
     {
-      title: "Analytics",
-      url: "/analytics",
-      icon: IconChartBar,
+      title: "Discover",
+      url: "/discover",
+      icon: IconCompass,
+    },
+    {
+      title: "Profile",
+      url: "/profile",
+      icon: IconUser,
     },
   ],
   navSecondary: [
@@ -55,7 +66,7 @@ const data = {
       icon: IconSettings,
     },
     {
-      title: "Resources",
+      title: "Reading Resources",
       url: "/resources",
       icon: IconBook,
     },
@@ -101,8 +112,8 @@ export function AppSidebar({ activeSection: _activeSection = "dashboard", ...pro
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link to="/dashboard">
-                <IconMail className="!size-5" />
-                <span className="text-base font-semibold">Klyne Labs - Pulse</span>
+                <IconBook2 className="!size-5" />
+                <span className="text-base font-semibold">Leaf Daily</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
