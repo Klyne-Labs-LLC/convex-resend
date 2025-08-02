@@ -16,7 +16,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run preview` - Preview the built application
 
 ### Testing Commands
-No test framework is currently configured. To add testing capabilities, consider adding Jest, Vitest, or another testing framework.
+- `npm run test` - Run tests with Vitest
+- `npm run test:ui` - Run tests with interactive UI
+- `npm run test:run` - Run tests once (CI mode)
 
 ### Setup Commands
 - `npx @convex-dev/auth` - Configure Convex Auth environment variables
@@ -140,3 +142,42 @@ The application uses React Router v6 for URL-based navigation:
 - `setup.mjs` automatically runs during `predev` to configure Convex Auth
 - Script prevents duplicate execution using `.env.local` flag (`SETUP_SCRIPT_RAN=1`)
 - Requires manual environment variable setup for Resend API key and webhook secret
+
+## Key Technical Details
+
+### Convex Function Patterns
+- All Convex functions in `convex/emails.ts` follow the new function syntax with explicit validators
+- `sendEmail` mutation validates authenticated users and their email domains
+- `listMyEmailsAndStatuses` query uses index-based lookup for performance
+- `handleEmailEvent` internal mutation processes Resend webhook events
+
+### Email Status Flow
+1. User sends email via `sendEmail` mutation
+2. Email ID stored in database linking user to Resend email
+3. Resend Component handles queuing and delivery
+4. Webhook events update email status (sent → delivered/bounced/complained)
+5. Real-time updates via Convex subscriptions
+
+### Theme System Implementation
+- Themes stored as CSS files in `src/themes/` directory
+- Auto-discovered using Vite's `import.meta.glob` pattern
+- Applied by dynamically loading CSS files based on user selection
+- Theme preference persisted in localStorage
+- Default theme: defined in `src/theme.config.ts`
+
+### Test Email Behavior
+When using Resend test addresses:
+- `delivered@resend.dev` - Simulates successful delivery
+- `bounced@resend.dev` - Simulates hard bounce (invalid recipient)
+- `complained@resend.dev` - Simulates spam complaint
+
+### Performance Considerations
+- Email history queries use `userId` index for O(log n) lookups
+- Limited to 10 most recent emails per query to maintain responsiveness
+- Convex handles real-time subscriptions efficiently with automatic caching
+
+### Security Notes
+- Authentication required for all email operations
+- Email domain verification enforced (sender must use verified domain)
+- Webhook events validated by Resend Component
+- No sensitive data exposed in client-side code
