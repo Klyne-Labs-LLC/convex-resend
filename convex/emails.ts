@@ -23,11 +23,11 @@ export const sendEmail = mutation({
     if (!me) throw new Error("User not found");
 
     const emailId = await resend.sendEmail(ctx, {
-      from: `${me.name ?? "Me"} <${me.email}>`,
+      from: `${me.name ?? "User"} <noreply@klynelabs.com>`,
       to: args.to,
       subject: args.subject,
       text: args.body,
-      replyTo: ["anian@klynelabs.com"],
+      replyTo: me.email ? [me.email] : [],
     });
     await ctx.db.insert("emails", {
       userId,
